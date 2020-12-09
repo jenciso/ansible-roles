@@ -1,0 +1,5 @@
+---
+- include: packages.yml
+
+- include: selinux.yml
+  when: selinux_enabled

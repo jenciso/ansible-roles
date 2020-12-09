@@ -1,0 +1,33 @@
+---
+- name: haproxy | setup systemd
+  template:
+    src: haproxy.service
+    dest: /etc/systemd/system/haproxy.service
+  notify:
+    - restart haproxy
+
+
+- name: haproxy | copying sysconfig
+  template:
+    src: sysconfig.haproxy
+    dest: /etc/sysconfig/haproxy
+  notify:
+    - restart haproxy
+
+
+- name: haproxy | copying haproxy.cfg
+  template:
+    src: haproxy.cfg
+    dest: /etc/haproxy/haproxy.cfg
+    backup: yes
+  notify:
+    - reload haproxy
+
+
+- name: haproxy | starting service
+  systemd: name=haproxy state=started enabled=yes daemon_reload=yes
+
+
+- name: haproxy | apply rules to open firewall port
+  firewalld: port={{ haproxy_port }}/tcp permanent=true state=enabled zone=public immediate=yes
+  when: not firewalld_disabled

@@ -1,0 +1,33 @@
+---
+- name: haproxy | create directories
+  file: path={{ item }} state=directory
+  with_items:
+    - "{{ haproxy_dir }}/.install"
+
+
+- name: haproxy | check if tar has been downloaded 
+  command: "test -f {{ haproxy_dir }}/.install/{{ haproxy_file }}"
+  register: haproxy_downloaded
+  failed_when: haproxy_downloaded.rc not in [0, 1]
+  changed_when: False
+
+  
+- name: haproxy | download haproxy
+  get_url:
+    url: "{{ haproxy_url_install }}"
+    dest: "{{ haproxy_dir }}/.install"
+  when: haproxy_downloaded.rc == 1
+
+
+- name: haproxy | untar
+  unarchive:
+    src: "{{ haproxy_dir }}/.install/{{ haproxy_file }}"
+    dest: "{{ haproxy_dir }}/.install"
+    remote_src: yes
+    creates: "{{ haproxy_dir }}/.install/haproxy-{{ haproxy_version }}.binary.centos7"
+
+
+- name: haproxy | copying binary file
+  shell: "cp -p {{ haproxy_dir }}/.install/haproxy-{{ haproxy_version }}.binary.centos7/haproxy {{ haproxy_dir_binary }}/haproxy ; chmod +x {{ haproxy_dir_binary }}/haproxy"
+  args:
+    creates: "{{ haproxy_dir_binary }}/haproxy"

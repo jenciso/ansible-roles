@@ -1,0 +1,10 @@
+---
+- name: Install tools
+  yum: 
+    state: present
+    name: 
+     - policycoreutils-python
+     - libselinux-python
+
+- name: Set selinux config
+  selinux: policy=targeted state={{ selinux_mode }}

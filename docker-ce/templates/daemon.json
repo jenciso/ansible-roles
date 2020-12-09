@@ -1,0 +1,15 @@
+{
+   "exec-opts": ["native.cgroupdriver=systemd"],
+   "storage-driver": "overlay2",
+   "storage-opts": [
+      "overlay2.override_kernel_check=true"
+    ],
+   "ipv6": false,
+   "log-opts": {
+      "max-size": "100m"
+   },
+{% if docker_registry_mirror %}
+   "registry-mirrors": ["{{ docker_registry_mirror }}"],
+{% endif %}
+   "insecure-registries" : [ {% for reg in insecure_registry %}"{{ reg }}"{% if not loop.last %},{% endif %}{% endfor %} ]
+}

@@ -1,0 +1,14 @@
+---
+- include: prereq.yml
+  tags: 
+    - join-win-ad
+
+- include: join.yml
+  tags:
+    - join-win-ad
+
+- include: leave.yml
+  when: not active_directory.enabled|bool
+  tags:
+    - join-win-ad
+  

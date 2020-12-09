@@ -1,0 +1,1 @@
+RELOADOPTS="-x {{ haproxy_admin_sock }}"

@@ -1,0 +1,31 @@
+---
+- name: docker | prereq
+  include: prereq.yml
+  when: deploy_docker|bool
+  tags:
+    - docker
+
+
+- name: docker | lvm partition
+  include: lvm.yml
+  when:
+    - deploy_docker_lvm_storage|bool
+    - deploy_docker|bool
+  tags:
+    - docker
+
+- name: docker | docker-compose
+  include: docker-compose.yml
+  tags:
+    - docker
+
+- name: docker | setup
+  include: docker.yml
+  tags:
+    - docker
+
+- name: docker | maintenance
+  include: maintenance.yml
+  when: docker_enable_maintenance|bool
+  tags:
+    - docker

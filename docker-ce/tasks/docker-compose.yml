@@ -1,0 +1,5 @@
+- name: docker | docker-compose install
+  shell: sudo -E curl -L "https://github.com/docker/compose/releases/download/1.27.3/docker-compose-$(uname -s)-$(uname -m)" -o /usr/bin/docker-compose && sudo chmod 755 /usr/bin/docker-compose
+  args:
+    creates: /usr/bin/docker-compose
+    warn: false

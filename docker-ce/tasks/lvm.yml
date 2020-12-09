@@ -1,0 +1,46 @@
+---
+- name: docker | Configure Disk Part
+  parted:
+    device: "{{ docker_lvm_device }}"
+    number: "{{ docker_lvm_device_number }}"
+    flags: [ lvm ]
+    state: present
+  when: deploy_docker|bool
+
+  
+- name: docker | Configure VG
+  lvg:
+    vg: docker-vg
+    pvs: "{{ docker_lvm_device }}{{ docker_lvm_device_number }}"
+  register: vg_created
+  ignore_errors: true
+  when: deploy_docker|bool
+
+
+- name: docker | Configure LV
+  lvol:
+    vg: docker-vg
+    lv: docker-pool
+    size: 100%FREE
+  ignore_errors: true
+  when: deploy_docker|bool
+
+
+- name: docker | format filesystem
+  filesystem:
+    fstype: xfs
+    dev: /dev/docker-vg/docker-pool
+  ignore_errors: true
+  when: deploy_docker|bool
+
+
+- name: docker | create dir docker-lib
+  file: path=/var/lib/docker state=directory
+
+
+- name: docker | mount filesystem
+  mount: 
+    path: /var/lib/docker
+    src: /dev/docker-vg/docker-pool
+    fstype: xfs
+    state: mounted

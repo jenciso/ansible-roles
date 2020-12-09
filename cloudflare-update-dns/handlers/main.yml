@@ -1,0 +1,4 @@
+- name: restart cloudflare-update-dns
+  shell: "docker-compose -f docker-compose.yml up --force-recreate -d"
+  args:
+    chdir: /data/cloudflare-update-dns

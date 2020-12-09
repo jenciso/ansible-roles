@@ -1,0 +1,11 @@
+---
+- name: node_exporter | installing
+  include: install.yml
+  tags:
+    - node_exporter
+
+- name: node_exporter | setup
+  include: setup.yml
+  tags:
+    - node_exporter
+

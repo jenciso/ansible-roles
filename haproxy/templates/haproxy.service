@@ -1,0 +1,21 @@
+[Unit]
+Description=HAProxy Load Balancer
+StartLimitInterval=0
+StartLimitBurst=0
+After=network.target rsyslog.service
+Wants=rsyslog.service
+
+[Service]
+EnvironmentFile=-/etc/sysconfig/haproxy
+Environment="CONFIG=/etc/haproxy/haproxy.cfg" "PIDFILE=/run/haproxy.pid"
+ExecStartPre={{ haproxy_dir_binary }}/haproxy -f $CONFIG -c -q $EXTRAOPTS
+ExecStart={{ haproxy_dir_binary }}/haproxy -Ws -f $CONFIG -p $PIDFILE $EXTRAOPTS
+ExecReload={{ haproxy_dir_binary }}/haproxy -f $CONFIG -c -q $EXTRAOPTS $RELOADOPTS
+ExecReload=/bin/kill -USR2 $MAINPID
+KillMode=mixed
+Restart=always
+SuccessExitStatus=143
+Type=notify
+
+[Install]
+WantedBy=multi-user.target

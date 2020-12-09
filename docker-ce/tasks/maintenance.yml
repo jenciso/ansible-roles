@@ -1,0 +1,13 @@
+---
+- name: docker | copy docker-prune.sh
+  template: 
+    src: docker-prune.sh
+    dest: /usr/bin/docker-prune.sh
+    mode: 0755
+ 
+- name: docker | prune images
+  cron:
+    name: "Docker prune"
+    minute: "0"
+    hour: "5"
+    job: "/usr/bin/docker-prune.sh"

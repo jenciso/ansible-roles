@@ -1,0 +1,24 @@
+- name: docker | Install docker-ce
+  yum: name={{ docker_package }} state=present enablerepo=docker-ce-stable
+
+
+- name: docker | proxy configuration
+  include: proxy.yml
+  when: proxy_enabled
+  tags:
+    - docker-proxy
+
+
+- name: docker | Create directory /etc/docker
+  file: path=/etc/docker state=directory
+
+
+- name: docker | Setup configuration in daemon.json
+  template:
+    src: daemon.json
+    dest: /etc/docker/daemon.json
+  notify: reload docker
+
+
+- name: docker | Start Service
+  systemd: name=docker state=started enabled=yes

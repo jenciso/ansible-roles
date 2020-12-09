@@ -1,0 +1,3 @@
+---
+- name: join-win-ad | realm leave 
+  shell: "realm leave {{ active_directory.domain }}"

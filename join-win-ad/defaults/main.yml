@@ -1,0 +1,8 @@
+---
+active_directory:
+  ip: 192.168.122.10
+  bind_user: administrator
+  bind_pass: SuperSecret2012
+  domain: corp.enciso.website
+  sudoers_group: sudoers
+  enabled: true

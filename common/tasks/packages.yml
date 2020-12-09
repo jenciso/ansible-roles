@@ -1,0 +1,11 @@
+- name: common | packages installation
+  yum:
+    name: 
+      - unzip
+      - bind-utils
+      - net-tools
+      - firewalld
+      - tcpdump
+      - epel-release
+      - ntpdate
+    state: present

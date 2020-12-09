@@ -1,0 +1,20 @@
+---
+## DOCKER
+deploy_docker: true
+deploy_docker_lvm_storage: false
+
+docker_package: "docker-ce"
+docker_lvm_device: /dev/sdb
+docker_lvm_device_number: 1
+docker_enable_maintenance: true
+docker_percentage_disksize_threshold: 75
+docker_registry_mirror: https://registry-1.docker.io
+
+insecure_registry:
+  - 127.0.0.1/8
+
+## PROXY Settings
+proxy_enabled: no
+proxy_server: 192.168.0.20
+proxy_port: 8080
+proxy_url: http://{{ proxy_server }}:{{ proxy_port }}

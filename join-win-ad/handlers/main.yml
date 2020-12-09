@@ -1,0 +1,10 @@
+---
+- name: restart sssd
+  systemd: name=sssd state=restarted
+
+- name: restart network
+  systemd: name=network state=restarted
+
+- name: restart sssd
+  systemd: name=sssd state=restarted
+

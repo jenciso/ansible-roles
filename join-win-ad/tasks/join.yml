@@ -1,0 +1,46 @@
+---
+- name: Install pexpect using pip
+  pip:
+    name: pexpect
+
+- name: Check if machine is bound
+  shell: /bin/bash -c "realm list | grep sssd"
+  register: realmd_bound
+  failed_when: false
+  changed_when: false
+  ignore_errors: true
+
+
+- name: join-win-ad | join
+  expect: 
+    command: /bin/bash -c "/sbin/realm join --user={{ active_directory.bind_user }} --os-name=linux {{ active_directory.domain }}"
+    responses:
+      Password for *: "{{ active_directory.bind_pass }}"
+    echo: no
+  no_log: true
+  when: realmd_bound.stdout == ""
+  ignore_errors: true
+
+
+- name: join-win-ad | config use_fully_qualified_names
+  lineinfile:
+    dest: /etc/sssd/sssd.conf
+    regexp: '^use_fully_qualified_names = '
+    line: 'use_fully_qualified_names = False'
+  notify: restart sssd
+
+
+- name: join-win-ad | config fallback_homedir
+  lineinfile:
+    path: /etc/sssd/sssd.conf
+    regexp: '^fallback_homedir = '
+    line: 'fallback_homedir = /home/%u'
+  notify: restart sssd 
+
+
+- name: join-win-ad | config sudoers group
+  lineinfile:                                                                                                                                                                                                       
+    path: /etc/sudoers.d/sudoers
+    regexp: '%{{ active_directory.sudoers_group }}'
+    line: '%{{ active_directory.sudoers_group }} ALL=(ALL) NOPASSWD:ALL'
+    create: yes

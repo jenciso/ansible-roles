@@ -1,0 +1,26 @@
+---
+- name: docker | Installing pre packages
+  yum: name=python-pip state=present
+
+
+- name: docker | installing pip packages
+  pip: name=docker-py
+
+
+- name: docker | Installing prereq packages
+  yum: 
+    state: present
+    name:
+    - yum-utils
+    - device-mapper-persistent-data
+    - lvm2
+
+
+- name: docker | Installing repo
+  yum_repository:
+    name: docker-ce-stable
+    description: Docker CE Stable - $basearch
+    baseurl: https://download.docker.com/linux/centos/7/$basearch/stable
+    file: docker-ce
+    gpgcheck: yes
+    gpgkey: https://download.docker.com/linux/centos/gpg

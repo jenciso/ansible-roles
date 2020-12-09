@@ -1,0 +1,3 @@
+---
+selinux_enabled: false
+selinux_mode: permissive

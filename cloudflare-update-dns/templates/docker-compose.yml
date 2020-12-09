@@ -1,0 +1,13 @@
+version: '3.1'
+
+services:
+
+  cloudflare-update-dns:
+    container_name: cloudflare-update-dns
+    image: jenciso/cloudflare-update-dns:latest
+    environment:
+      - CFKEY={{ cf_key }}
+      - CFUSER={{ cf_user }}
+      - CFZONE={{ cf_zone }}
+      - CFHOST={{ cf_host }}
+    restart: always

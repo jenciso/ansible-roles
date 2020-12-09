@@ -1,0 +1,27 @@
+---
+- name: cloudflare-update-dns | create directory
+  file: path={{ item }} state=directory
+  with_items:
+    - /data/cloudflare-update-dns
+
+
+- name: cloudflare-update-dns | create .env
+  lineinfile:
+    path: /data/cloudflare-update-dns/.env
+    regexp: '^COMPOSE_PROJECT_NAME='
+    state: present
+    create: yes
+    line: COMPOSE_PROJECT_NAME=cloudflare-update-dns
+
+
+- name: cloudflare-update-dns | copy docker-compose.yml
+  template:
+    src: docker-compose.yml
+    dest: /data/cloudflare-update-dns
+  notify: restart cloudflare-update-dns
+
+
+- name: start cloudflare-update-dns
+  shell: "docker-compose -f docker-compose.yml up -d"
+  args:
+    chdir: /data/cloudflare-update-dns
