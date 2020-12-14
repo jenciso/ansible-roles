@@ -1,5 +1,7 @@
 - name: docker | Install docker-ce
   yum: name={{ docker_package }} state=present enablerepo=docker-ce-stable
+  notify:
+    - restart docker
 
 
 - name: docker | proxy configuration
